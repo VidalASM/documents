@@ -1,0 +1,95 @@
+<odoo>
+    <record id="view_document_log_report_search" model="ir.ui.view">
+        <field name="name">document.log.report.search</field>
+        <field name="model">document.log.report</field>
+        <field name="arch" type="xml">
+            <search string="Document Log Report Search">
+                <field name="document_id" string="Document"/>
+                <field name="author_id" string="Author"/>
+                <group expand="0" string="Group By">
+                    <filter string="Document" name="document_id" domain="[]" context="{'group_by': 'document_id'}"/>
+                    <filter string="Author" name="author_id" domain="[]" context="{'group_by': 'author_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_document_log_report_tree" model="ir.ui.view">
+        <field name="name">document.log.report.tree</field>
+        <field name="model">document.log.report</field>
+        <field name="arch" type="xml">
+            <tree create="false" string="Document Log Report">
+                <field name="document_id" string="Documnet"/>
+                <field name="author_id" string="Author"/>
+                <field name="message_type" string="Type" optional="show"/>
+                <field name="date" string="Date" optional="show"/>
+                <field name="body" string="Body" options="{'style-inline': true}" optional="show"/>
+                <button name="report_details" type="object" class="fa fa-search"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_document_log_report_tree_view" model="ir.actions.act_window">
+        <field name="name">Document Log Report</field>
+        <field name="res_model">document.log.report</field>
+        <field name="search_view_id" ref="view_document_log_report_search" />
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="action_document_log_report_pdf" model="ir.actions.report">
+        <field name="name">Print document log report</field>
+        <field name="model">document.log.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">document_log_report.document_log_report_pdf</field>
+        <field name="report_file">document_log_report.document_log_report_pdf</field>
+        <field name="print_report_name">'Document Log Report'</field>
+        <field name="binding_model_id" ref="model_document_log_report"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="document_log_report_pdf">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="o_document_reports_page">
+                    <table class="data_table table-bordered" style="width: 100%; font-size: 10px" name="report_table">
+                        <tr class="text-center">
+                            <th t-att-rowspan="1">
+                                <span>Document Name</span>
+                            </th>
+                            <th t-att-rowspan="1">
+                                <span>Author Name</span>
+                            </th>
+                            <th t-att-rowspan="1">
+                                <span>Type</span>
+                            </th>
+                            <th t-att-rowspan="1">
+                                <span>Date</span>
+                            </th>
+                            <th t-att-rowspan="1">
+                                <span>Body</span>
+                            </th>
+                        </tr>
+                        <t t-foreach="docs" t-as="line">
+                            <tr>
+                                <td>
+                                    <t t-out="line.document_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-out="line.author_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-out="line.message_type"/>
+                                </td>
+                                <td>
+                                    <t t-out="line.date"/>
+                                </td>
+                                <td>
+                                    <t t-out="line.body"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>
