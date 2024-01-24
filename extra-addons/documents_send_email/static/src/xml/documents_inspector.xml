@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="documents.DocumentsInspector.buttons" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('o_inspector_download')]" position="after">       
+            <button class="btn fa fa-envelope o_inspector_button o_inspector_send_email" title="send a file throguh email wizard"  t-on-click.stop.prevent="_onSendEmail" t-att-disabled="editDisabled"/>
+        </xpath>
+    </t>
+
+</templates>
