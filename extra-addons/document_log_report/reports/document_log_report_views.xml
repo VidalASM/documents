@@ -18,11 +18,11 @@
         <field name="model">document.log.report</field>
         <field name="arch" type="xml">
             <tree create="false" string="Document Log Report">
-                <field name="document_id" string="Documnet"/>
-                <field name="author_id" string="Author"/>
-                <field name="message_type" string="Type" optional="show"/>
-                <field name="date" string="Date" optional="show"/>
-                <field name="body" string="Body" options="{'style-inline': true}" optional="show"/>
+                <field name="date" string="Event Time" optional="show"/>
+                <field name="document_id" string="Document"/>
+                <field name="author_id" string="User Name"/>
+                <field name="message_type" string="Event Type" optional="show"/>
+                <field name="body" string="Changes" options="{'style-inline': true}" optional="show"/>
                 <button name="report_details" type="object" class="fa fa-search"/>
             </tree>
         </field>
