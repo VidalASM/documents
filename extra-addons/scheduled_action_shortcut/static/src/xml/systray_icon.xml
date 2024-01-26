@@ -4,11 +4,11 @@
   <t t-name="stick_scheduled_action.ScheduledActionSystray" owl="1">
                  <div class="toggle-icon calender-systray" role="button"
                       id="gg"
-                      title="Scheduled Actions"
+                      title="Open Scanner"
                       t-on-click.prevent="_onClickScheduledAction"
                       style="margin-top:10px;">
-                     <i id='show_sa' class="fa fa-calendar" role="img"
-                        aria-label="Scheduled Actions"
+                     <i id='show_sa' class="fa fa-print" role="img"
+                        aria-label="Open Scanner"
                         style="width:15px;height:15px;color:white"/>
                  </div>
   </t>
