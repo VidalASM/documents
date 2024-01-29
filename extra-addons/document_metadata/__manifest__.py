@@ -9,7 +9,7 @@
     "license": "OPL-1",
     'website': 'https://www.klystronglobal.com',
 
-    "depends": ["web", "documents", "hr"],
+    "depends": ["web", "documents"],
     "data": [
         'security/ir.model.access.csv',
         # 'views/email_template.xml',

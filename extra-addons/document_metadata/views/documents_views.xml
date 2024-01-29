@@ -7,6 +7,7 @@
             <field name="inherit_id" ref="documents.documents_view_list"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
+                    <field name="document_type_id" optional="show"/>
                     <field name="level_1" optional="hide"/>
                     <field name="level_2" optional="hide"/>
                     <field name="level_3" optional="hide"/>
@@ -17,10 +18,10 @@
                     <field name="document_date"/>
                     <field name="origin" optional="hide"/>
                     <field name="number" optional="hide"/>
-                    <field name="issue" optional="hide"/>
-                    <field name="sender" optional="hide"/>
+                    <!-- <field name="issue" optional="hide"/> -->
+                    <!-- <field name="sender" optional="hide"/> -->
                     <field name="file_id" optional="hide"/>
-                    <field name="social_reason" optional="hide"/>
+                    <!-- <field name="social_reason" optional="hide"/> -->
                     <field name="medium" optional="hide"/>
                     <field name="file_amount" optional="hide"/>
                     <field name="image_amount" optional="hide"/>
@@ -42,7 +43,6 @@
                     <field name="document_date"/>
                     <field name="origin"/>
                     <field name="number"/>
-                    <field name="issue"/>
                     <field name="sender"/>
                     <field name="file_id" invisible="1"/>
                     <field name="social_reason"/>
@@ -51,12 +51,14 @@
                     <field name="image_amount"/>
                 </field>
                 <field name="tag_ids" position="after">
+                    <field name="document_type_id"/>
                     <field name="file_type"/>
                     <field name="file_number"/>
                     <field name="file_description"/>
                     <field name="sgd_number"/>
                     <field name="file_date_begin"/>
                     <field name="file_date_end"/>
+                    <field name="issue"/>
                 </field>
             </field>
         </record>
@@ -71,6 +73,48 @@
                 </field>
             </field>
         </record>
+
+        <!-- Tipos de Documento -->
+        <record model="ir.ui.view" id="project_documents_type_form">
+            <field name="name">documents.type.form</field>
+            <field name="model">documents.type</field>
+            <field name="arch" type="xml">
+                <form string="Project Template Form">
+                    <sheet>
+                        <group>
+                            <field name="name" placeholder="Nombre"/>
+                        </group>
+                        <group>
+                            <field name="description" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="documents_type_tree">
+            <field name="name">documents.type.tree</field>
+            <field name="model">documents.type</field>
+            <field name="arch" type="xml">
+                <tree string="documents type Tree">
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="documents_type_menu_action" model="ir.actions.act_window">
+            <field name="name">Documents type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">documents.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Expedientes</p>
+            </field>
+        </record>
+        <menuitem id="documents_type_menu" parent="documents.Config" name="Tipos de Documento"
+                  action="documents_type_menu_action"/>
 
         <!-- Expedientes -->
         <record model="ir.ui.view" id="project_documents_file_form">

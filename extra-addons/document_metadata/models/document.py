@@ -6,6 +6,12 @@ from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
+class DocumentType(models.Model):
+    _name = 'documents.type'
+
+    name = fields.Char(required=True)
+    description = fields.Char('Descripción')
+
 class DocumentLevel(models.Model):
     _name = 'documents.level'
 
@@ -26,7 +32,9 @@ class DocumentFile(models.Model):
 
 class Document(models.Model):
     _inherit = 'documents.document'
+    
     document_date = fields.Date('Fecha del documento', tracking=True, default=fields.Date.today())
+    document_type_id = fields.Many2one('documents.type', string='Tipo de Documento')
     level_1 = fields.Many2one('documents.level', string='Fondo')
     level_2 = fields.Many2one('documents.level', string='Sección')
     level_3 = fields.Many2one('documents.level', string='Serie Documental')
@@ -34,7 +42,7 @@ class Document(models.Model):
     level_5 = fields.Many2one('documents.level', string='Año')
     origin = fields.Char('Origen')
     number = fields.Char('Número')
-    issue = fields.Char('Asunto')
+    issue = fields.Text('Asunto')
     sender = fields.Char('Remitente')
     file_id = fields.Many2one('documents.file', string='Expediente')
     social_reason = fields.Char('Razón Social')
