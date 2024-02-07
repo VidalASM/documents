@@ -3,6 +3,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+import logging 
+_logger = logging.getLogger(__name__)
 
 class AuditlogLog(models.Model):
     _name = "auditlog.log"
@@ -72,7 +74,7 @@ class AuditlogLogLine(models.Model):
         """Ensure field_id is not empty on creation and store field_name and
         field_description."""
         for vals in vals_list:
-            if not vals.get("field_id"):
+            if vals and not vals.get("field_id"):
                 raise UserError(_("No field defined to create line."))
             field = self.env["ir.model.fields"].sudo().browse(vals["field_id"])
             vals.update(
@@ -83,6 +85,8 @@ class AuditlogLogLine(models.Model):
     def write(self, vals):
         """Ensure field_id is set during write and update field_name and
         field_description values."""
+        #_logger.info('Youdd need ------------->.')
+        #_logger.info(vals)
         if "field_id" in vals:
             if not vals["field_id"]:
                 raise UserError(_("The field 'field_id' cannot be empty."))
@@ -90,4 +94,5 @@ class AuditlogLogLine(models.Model):
             vals.update(
                 {"field_name": field.name, "field_description": field.field_description}
             )
+        _logger.info(vals)
         return super().write(vals)

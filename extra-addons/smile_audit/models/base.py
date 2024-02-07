@@ -6,6 +6,8 @@
 from odoo import api, fields, models
 from odoo.tools.safe_eval import datetime, safe_eval
 
+import logging 
+_logger = logging.getLogger(__name__)
 
 class Base(models.AbstractModel):
     _inherit = "base"
@@ -90,6 +92,8 @@ class Base(models.AbstractModel):
 
     @api.model
     def _create(self, data_list):
+        _logger.info('You create amile audit ------------->.')
+        _logger.info(data_list)
         records = super(Base, self)._create(data_list)
         if self._get_audit_rule('create'):
             for data in data_list:

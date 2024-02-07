@@ -56,7 +56,7 @@
         //          [cron_id]
         //      ],
         //  });
-         window.open("https://pcdocs.holacliente.com/scanner", "_blank");
+         window.open("https://perucomprasdigital.holacliente.pe/scanner/", "_blank");
      }
      closeDropdown(ev) {
          if (this.root.el && !this.root.el?.contains(ev.target)) {

@@ -15,13 +15,14 @@ class Base(models.AbstractModel):
         """
         Override : Add logs handler to the action of searching data
         """
-        _logger.info('You need ------------->. %s' %(str(self._context.get('params'))))
+        _logger.info('You need ------------->. %s' %(str(domain)))
         ctx = self._context.get('params', False)
         rule = self.env['auditlog.rule'].search([('model_id.model','=','documents.document')], limit=1)
         model_name = ctx['model'] if ctx and 'model' in ctx else ''
         action_id = ctx['action'] if ctx and 'action' in ctx else 0
         logger = SmileDBLogger(self._cr.dbname, model_name, action_id, self._uid)
-        logger.info("Busqueda de registros --> %s" %(str(domain)))
+        dom = str(domain) if domain else ''
+        logger.info("Busqueda de registros --> %s" %(dom))
         if model_name == 'documents.document' and rule:
             res_name = 'Search document'
             model_id = rule.pool._auditlog_model_cache['documents.document']
