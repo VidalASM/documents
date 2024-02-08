@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_company_form_inherit" model="ir.ui.view">
+        <field name="name">res.company.inherit</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='social_media']" position="after">
+                <group string="Database Info">
+                    <label for="database_size"/>
+                    <div class="o_row">
+                        <field name="database_size"/>
+                        <button type='object' name="get_table_size" string="Get Each Table Size" icon="fa-arrow-right" class="oe_link"/>
+                    </div>
+
+                    <field name="cpu_usage"/>
+                    <field name="cpu_count"/>
+                    <field name="mem_total"/>
+                    <field name="mem_used"/>
+                    <field name="mem_used_percent"/>
+                    <field name="mem_free"/>
+                    <field name="disk_mem_total"/>
+                    <field name="disk_mem_used"/>
+                    <field name="disk_mem_used_percent"/>
+                    <field name="disk_mem_free"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="relation_table_size_search" model="ir.ui.view">
+        <field name="name">relation.table.size.search</field>
+        <field name="model">relation.table.size</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="relation_table_size_tree" model="ir.ui.view">
+        <field name="name">relation.table.size.tree</field>
+        <field name="model">relation.table.size</field>
+        <field name="arch" type="xml">
+            <tree import="0">
+                <field name="name"/>
+                <field name="size"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
