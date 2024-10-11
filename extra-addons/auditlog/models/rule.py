@@ -6,6 +6,9 @@ import copy
 from odoo import _, api, fields, models, modules
 from odoo.exceptions import UserError
 
+import logging 
+_logger = logging.getLogger(__name__)
+
 FIELDS_BLACKLIST = [
     "id",
     "create_uid",
@@ -517,22 +520,29 @@ class AuditlogRule(models.Model):
                 "http_session_id": http_session_model.current_http_session(),
             }
             vals.update(additional_log_values or {})
-            log = log_model.create(vals)
             diff = DictDiffer(
                 new_values.get(res_id, EMPTY_DICT), old_values.get(res_id, EMPTY_DICT)
             )
+            request = http_request_model.browse(http_request_model.current_http_request())
+            if (method != "write" or len(diff.changed()) > 1) and 'web_search_read' not in request.name:
+                log = log_model.create(vals)
+            else:
+                _logger.info('Write ------------->')
+                _logger.info(diff.changed())
             if method == "create":
                 self._create_log_line_on_create(
                     log, diff.added(), new_values, fields_to_exclude
                 )
-            elif method == "read":
+            elif method == "read" and 'web_search_read' not in request.name:
+                #_logger.info('Read ------------->')
+                #_logger.info(request.name)
                 self._create_log_line_on_read(
                     log,
                     list(old_values.get(res_id, EMPTY_DICT).keys()),
                     old_values,
                     fields_to_exclude,
                 )
-            elif method == "write":
+            elif method == "write" and len(diff.changed()) > 1:
                 self._create_log_line_on_write(
                     log, diff.changed(), old_values, new_values, fields_to_exclude
                 )

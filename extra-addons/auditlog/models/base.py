@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from datetime import datetime, date, timedelta
 
 import logging 
 from odoo.addons.smile_log.tools import SmileDBLogger
@@ -19,12 +20,13 @@ class Base(models.AbstractModel):
         ctx = self._context.get('params', False)
         rule = self.env['auditlog.rule'].search([('model_id.model','=','documents.document')], limit=1)
         model_name = ctx['model'] if ctx and 'model' in ctx else ''
+        #_logger.info('Model ------------->. %s' %(str(self._context)))
         action_id = ctx['action'] if ctx and 'action' in ctx else 0
         logger = SmileDBLogger(self._cr.dbname, model_name, action_id, self._uid)
         dom = str(domain) if domain else ''
         logger.info("Busqueda de registros --> %s" %(dom))
-        if model_name == 'documents.document' and rule:
-            res_name = 'Search document'
+        if rule and 'method' not in dom and len(dom) > 5: #'folder_id' in dom and '&' in dom and rule: #model_name == 'documents.document' and rule:
+            res_name = 'Search document '
             model_id = rule.pool._auditlog_model_cache['documents.document']
             res_id = 0
             method = 'search'
@@ -32,7 +34,7 @@ class Base(models.AbstractModel):
             http_request_model = self.env["auditlog.http.request"]
             http_session_model = self.env["auditlog.http.session"]
             vals = {
-                "name": res_name,
+                "name": res_name + datetime.strftime(datetime.today() - timedelta(hours=5), "%Y-%m-%d %H:%M:%S"),
                 "model_id": model_id,
                 "res_id": res_id,
                 "method": method,
@@ -51,6 +53,9 @@ class Base(models.AbstractModel):
                 "new_value_text": str(domain),
             }
             self.env["auditlog.log.line"].create(log_vals)
+            log.write({
+                "res_id": log.id,
+            })
             # rule.create_logs(uid=self._uid, res_model='documents.document', res_ids=0, method='search')
 
         return super(Base, self).web_search_read(domain, fields, offset, limit, order, count_limit)

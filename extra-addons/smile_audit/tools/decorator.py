@@ -3,8 +3,10 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 
 import sys
+import logging
 
 from odoo import api
+_logger = logging.getLogger(__package__)
 
 if sys.version_info > (3,):
     long = int
@@ -50,23 +52,25 @@ def audit_decorator(method):
                 (self._name == self._context.get('audit_rec_model') and
                  self.ids != self._context.get('audit_rec_ids'))):
             rule = self._get_audit_rule('write')
-        if rule:
-            old_values = self.sudo().read(load='_classic_write')
-        result = audit_write.origin(self, vals)
-        if rule:
+        #if rule:
+            #old_values = self.sudo().read(load='_classic_write')
+        #result = audit_write.origin(self, vals)
+        if rule and 1 != 1:
             if audit_write.origin.__name__ == '_write':
                 new_values = get_new_values(self)
             else:
                 new_values = self.sudo().read(load='_classic_write')
-            keys = new_values[0].keys()
-            for key in keys:
-                if str(type(new_values[0][key])) == "<class 'markupsafe.Markup'>":
-                    new_values[0][key] = str(new_values[0][key])
-                    old_values[0][key] = str(old_values[0][key])
-            update_type_defaultdict(new_values[0])
-            update_type_defaultdict(old_values[0])
+            if new_values:
+                _logger.info(new_values)
+                keys = new_values[0].keys() if new_values[0] else []
+                for key in keys:
+                    if str(type(new_values[0][key])) == "<class 'markupsafe.Markup'>":
+                        new_values[0][key] = str(new_values[0][key])
+                        old_values[0][key] = str(old_values[0][key])
+                update_type_defaultdict(new_values[0])
+                update_type_defaultdict(old_values[0])
             rule.log('write', old_values, new_values)
-        return result
+        return True #result
 
     def audit_unlink(self):
         rule = self._get_audit_rule('unlink')

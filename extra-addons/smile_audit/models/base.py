@@ -92,10 +92,10 @@ class Base(models.AbstractModel):
 
     @api.model
     def _create(self, data_list):
-        _logger.info('You create amile audit ------------->.')
-        _logger.info(data_list)
+        #_logger.info('You create amile audit ------------->.')
+        #_logger.info(data_list)
         records = super(Base, self)._create(data_list)
-        if self._get_audit_rule('create'):
+        if self._get_audit_rule('create') and data_list:
             for data in data_list:
                 data['record'] = data['record'].with_context({
                     'audit_rec_model': self._name,
