@@ -61,20 +61,21 @@ class Base(models.AbstractModel):
             self._name, {}).get(method)
         return AuditRule.browse(rule_id) if rule_id else None
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        if not self._get_audit_rule('create') or not (
-                self.recompute and self._context.get('recompute', True)):
-            return super(Base, self).create(vals_list)
-        audit_ctx = dict(self._context)
-        audit_ctx.setdefault('do_not_recompute_for', [])
-        audit_ctx['do_not_recompute_for'].append(self._name)
-        records = super(Base, self.with_context(audit_ctx)).create(vals_list)
-        self.with_context({
-            'audit_rec_model': self._name,
-            'audit_rec_ids': records.ids,
-        }).recompute(fnames=None, records=None)
-        return records
+#    @api.model_create_multi
+#    def create(self, vals_list):
+#        return super(Base, self).create(vals_list)
+#        if not self._get_audit_rule('create') or not (
+#                self.recompute and self._context.get('recompute', True)):
+#            return super(Base, self).create(vals_list)
+#        audit_ctx = dict(self._context)
+#        audit_ctx.setdefault('do_not_recompute_for', [])
+#        audit_ctx['do_not_recompute_for'].append(self._name)
+#        records = super(Base, self.with_context(audit_ctx)).create(vals_list)
+#        self.with_context({
+#            'audit_rec_model': self._name,
+#            'audit_rec_ids': records.ids,
+#        }).recompute(fnames=None, records=None)
+#        return records
 
     @api.model
     def recompute(self, fnames=None, records=None):
@@ -90,23 +91,45 @@ class Base(models.AbstractModel):
             })
         return records
 
-    @api.model
-    def _create(self, data_list):
-        #_logger.info('You create amile audit ------------->.')
+#    @api.model
+#    def _create(self, data_list):
+        #_logger.info('You create smile audit ------------->.')
         #_logger.info(data_list)
-        records = super(Base, self)._create(data_list)
-        if self._get_audit_rule('create') and data_list:
-            for data in data_list:
-                data['record'] = data['record'].with_context({
-                    'audit_rec_model': self._name,
-                    'audit_rec_ids': data['record'].ids,
-                })
-        return records
 
-    def write(self, vals):
-        if not self._get_audit_rule('write'):
-            return super(Base, self).write(vals)
-        return super(Base, self.with_context({
-            'audit_rec_model': self._name,
-            'audit_rec_ids': self.ids,
-        })).write(vals)
+#        def replace_text(dat):
+#            if not isinstance(dat, dict):
+#                # return dat.text.replace('\x00', '')
+#                _logger.info(dat)
+#                return dat.replace('\0', '')
+
+#        def check_dict(data_list1):
+#            # _logger.info(data_list1)
+#            if isinstance(data_list1, dict):
+#                for key1, value1 in data_list1.items():
+#                    if isinstance(value1, dict):
+#                        check_dict(value1)
+#                    if isinstance(value1, str):
+#                        value1 = replace_text(value1)
+#            else:
+#                for dat in data_list1:
+#                    check_dict(dat)
+
+#        check_dict(data_list)
+#        _logger.info('12 ------->')
+#        _logger.info(data_list)
+#        records = super(Base, self)._create(data_list)
+#        if self._get_audit_rule('create') and data_list:
+#            for data in data_list:
+#                data['record'] = data['record'].with_context({
+#                    'audit_rec_model': self._name,
+#                    'audit_rec_ids': data['record'].ids,
+#                })
+#        return records
+
+#    def write(self, vals):
+#        if not self._get_audit_rule('write'):
+#            return super(Base, self).write(vals)
+#        return super(Base, self.with_context({
+#            'audit_rec_model': self._name,
+#            'audit_rec_ids': self.ids,
+#        })).write(vals)

@@ -524,7 +524,7 @@ class AuditlogRule(models.Model):
                 new_values.get(res_id, EMPTY_DICT), old_values.get(res_id, EMPTY_DICT)
             )
             request = http_request_model.browse(http_request_model.current_http_request())
-            if (method != "write" or len(diff.changed()) > 1) and 'web_search_read' not in request.name:
+            if (method != "write" or len(diff.changed()) > 1): #and 'web_search_read' not in request.name:
                 log = log_model.create(vals)
             else:
                 _logger.info('Write ------------->')
