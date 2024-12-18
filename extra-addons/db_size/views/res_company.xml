@@ -14,6 +14,7 @@
                         <button type='object' name="get_table_size" string="Get Each Table Size" icon="fa-arrow-right" class="oe_link"/>
                     </div>
 
+                    <field name="mem_attachment"/>
                     <field name="cpu_usage"/>
                     <field name="cpu_count"/>
                     <field name="mem_total"/>

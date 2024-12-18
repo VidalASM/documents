@@ -1,7 +1,7 @@
 #-*- coding:utf-8 -*-
 {
     'name': "RP Database Size",
-    'version': '13.0.1.0.1',
+    'version': '16.0.1.0.1',
     'description': "Database Size",
     'summary': 'This module helps to show size of current postgres database.',
     'author': 'RP Odoo Developer',

@@ -9,20 +9,22 @@ class ResCompanyInherit(models.Model):
 
     database_size = fields.Char(string="Database Size", compute="_get_db_size")
 
-    cpu_usage = fields.Char(string="CPU Usage", compute="get_memory_usage")
-    cpu_count = fields.Char(string="CPU Count", compute="get_memory_usage")
-    mem_total = fields.Char(string="Memory Total", compute="get_memory_usage")
-    mem_used = fields.Char(string="Memory Used", compute="get_memory_usage")
-    mem_used_percent = fields.Char(string="Memory Used %", compute="get_memory_usage")
-    mem_free = fields.Char(string="Memory Free", compute="get_memory_usage")
-    disk_mem_total = fields.Char(string="Disk Memory Total", compute="get_memory_usage")
-    disk_mem_used = fields.Char(string="Disk Memory Used", compute="get_memory_usage")
-    disk_mem_used_percent = fields.Char(string="Disk Memory Used %", compute="get_memory_usage")
-    disk_mem_free = fields.Char(string="Disk Memory Free", compute="get_memory_usage")   
+    cpu_usage = fields.Char(string="Uso de CPU", compute="get_memory_usage")
+    cpu_count = fields.Char(string="Cantidad de CPUs", compute="get_memory_usage")
+    mem_total = fields.Char(string="Memoria total", compute="get_memory_usage")
+    mem_used = fields.Char(string="Memoria utilizada", compute="get_memory_usage")
+    mem_used_percent = fields.Char(string="Memoria utilizada %", compute="get_memory_usage")
+    mem_free = fields.Char(string="Memoria libre", compute="get_memory_usage")
+    disk_mem_total = fields.Char(string="Memoria total del disco", compute="get_memory_usage")
+    disk_mem_used = fields.Char(string="Memoria de disco utilizada", compute="get_memory_usage")
+    disk_mem_used_percent = fields.Char(string="Memoria de disco utilizada %", compute="get_memory_usage")
+    disk_mem_free = fields.Char(string="Memoria de disco libre", compute="get_memory_usage")   
+    mem_attachment = fields.Char(string="Memoria utilizada en documentos", compute="get_memory_usage")
 
     def get_memory_usage(self):
         self.cpu_usage = f'{psutil.cpu_percent()} %'
         self.cpu_count = psutil.cpu_count()
+        attachments = self.env['ir.attachment'].sudo().search([])
 
         mem_info = psutil.virtual_memory()
         self.mem_total = f'{(mem_info.total/(1024*1024)):.0f} Mb'
@@ -35,6 +37,8 @@ class ResCompanyInherit(models.Model):
         self.disk_mem_used = f'{(disk_mem_info.used / (1024 * 1024)):.0f} Mb'
         self.disk_mem_used_percent = f'{disk_mem_info.percent} %'
         self.disk_mem_free = f'{(disk_mem_info.free / (1024 * 1024)):.0f} Mb' 
+        # attachment size
+        self.mem_attachment = f'{(sum(attachments.mapped("file_size")) / 1000000):.0f} Mb'
 
     @api.depends('name', 'partner_id')
     def _get_db_size(self):
