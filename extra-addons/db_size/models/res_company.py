@@ -19,12 +19,15 @@ class ResCompanyInherit(models.Model):
     disk_mem_used = fields.Char(string="Memoria de disco utilizada", compute="get_memory_usage")
     disk_mem_used_percent = fields.Char(string="Memoria de disco utilizada %", compute="get_memory_usage")
     disk_mem_free = fields.Char(string="Memoria de disco libre", compute="get_memory_usage")   
-    mem_attachment = fields.Char(string="Memoria utilizada en documentos", compute="get_memory_usage")
+    mem_attachment = fields.Char(string="Memoria utilizada en archivos adjuntos", compute="get_memory_usage")
+    mem_documents = fields.Char(string="Peso actual en documentos", compute="get_memory_usage")
+
 
     def get_memory_usage(self):
         self.cpu_usage = f'{psutil.cpu_percent()} %'
         self.cpu_count = psutil.cpu_count()
         attachments = self.env['ir.attachment'].sudo().search([])
+        documents = self.env['documents.document'].sudo().search([])
 
         mem_info = psutil.virtual_memory()
         self.mem_total = f'{(mem_info.total/(1024*1024)):.0f} Mb'
@@ -39,6 +42,11 @@ class ResCompanyInherit(models.Model):
         self.disk_mem_free = f'{(disk_mem_info.free / (1024 * 1024)):.0f} Mb' 
         # attachment size
         self.mem_attachment = f'{(sum(attachments.mapped("file_size")) / 1000000):.0f} Mb'
+        mem_documents = sum(documents.mapped("file_size"))
+        if mem_documents < 1000 * 1024 * 1024:
+            self.mem_documents = f'{(mem_documents / (1024 * 1024.0)):.2f} Mb'
+        else:
+            self.mem_documents = f'{(mem_documents / (1024 * 1024 * 1024.0)):.2f} Gb'
 
     @api.depends('name', 'partner_id')
     def _get_db_size(self):
