@@ -21,6 +21,7 @@ class ResCompanyInherit(models.Model):
     disk_mem_free = fields.Char(string="Memoria de disco libre", compute="get_memory_usage")   
     mem_attachment = fields.Char(string="Memoria utilizada en archivos adjuntos", compute="get_memory_usage")
     mem_documents = fields.Char(string="Peso actual en documentos", compute="get_memory_usage")
+    mem_assigned = fields.Char(string="Almacenamiento Asignado Documentos", default="1800 Gb")
 
 
     def get_memory_usage(self):
